@@ -27,11 +27,15 @@ Existe um arquivo de exemplo em tests/resources.
 ## Informações sobre a classe App\CartaoCredito\Bin
 
 A classe Bin possui uma lógica muito simplista e por consequência errada que faz com que ela não reconheça corretamente os cartões. Você deve 
-melhorar o algoritmo de reconhecimento do cartão sem alterar o conteúdo do método App\CartaoCredito\TabelaBins::getTabela 
+melhorar o algoritmo de reconhecimento do cartão sem alterar o conteúdo do método `App\CartaoCredito\TabelaBins::getTabela` 
 porque hipoteticamente essa tabela vem de um banco de dados do cliente que você não tem acesso nem permissão para mudar.
 As demais classes podem ser alteradas sem problema, desde que o teste passe como está.
+
 Você não deve duplicar a informação dos bins em nenhum outro lugar.
-O seu algoritmo deve continuar funcionando mesmo que se adicione mais bins de outras possíveis novas bandeiras. Por exemplo:
+
+O seu algoritmo deve continuar funcionando mesmo que se adicione mais bins de outras possíveis novas bandeiras. 
+
+Por exemplo:
 Foi criada uma nova bandeira chamada ABC com bin 60112. 6011 É o bin da bandeira Discover, mas se for usado 60112 ele
 deve reconhecer a bandeira ABC sem ter que alterar nada no algoritmo de reconhecimento das bandeiras, somente na classe
-Bandeira
+Bandeira.
