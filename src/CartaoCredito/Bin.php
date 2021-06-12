@@ -66,28 +66,26 @@ class Bin
     public function findBandeira(): Bandeira
     {
         $tabelaPrimeirosDigitos = TabelaBins::getTabela();
-
+        $bandeiraCartao = [
+            'bin' => null,
+            'bandeira' => new Bandeira(Bandeira::NULL)
+        ];
         foreach ($tabelaPrimeirosDigitos as $bandeira => $bins) {
             foreach ($bins as $bin) {
-                if (!$this->verificarBinIgualPrimeirosDigitos($bin)) {
-                    continue;
+                if ($this->verificarBinIgualPrimeirosDigitos($bin)) {
+                    if (!$bandeiraCartao['bin'] || strlen($bin)>strlen($bandeiraCartao['bin'])) {
+                        $bandeiraCartao['bin'] = $bin;
+                        $bandeiraCartao['bandeira'] = new Bandeira($bandeira);
+                    }
                 }
-                return new Bandeira($bandeira);
             }
         }
-
-        return new Bandeira(Bandeira::NULL);
+        return $bandeiraCartao['bandeira'];
     }
 
     private function verificarBinIgualPrimeirosDigitos(string $primeirosDigitos): bool
     {
-        $qtdCaracteresFaixa = strlen($primeirosDigitos);
-        $primeirosDigitosBin = substr($this->numeroCartao, 0, $qtdCaracteresFaixa);
-
-        if ($primeirosDigitosBin == $primeirosDigitos) {
-            return true;
-        }
-
-        return false;
+        $positionOfCodeInCardNumber = strpos($this->numeroCartao, $primeirosDigitos);
+        return ($positionOfCodeInCardNumber !== false && $positionOfCodeInCardNumber === 0);
     }
 }
