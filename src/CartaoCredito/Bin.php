@@ -4,6 +4,8 @@
 namespace App\CartaoCredito;
 
 
+use BadMethodCallException;
+
 class Bin
 {
     private string $numeroCartao;
@@ -13,54 +15,12 @@ class Bin
         $this->numeroCartao = $numeroCartao;
     }
 
-    public function isVisa(): bool
+    public function __call($name, $arguments)
     {
-        return $this->findBandeira()->isVisa();
-    }
-
-    public function isMasterCard(): bool
-    {
-        return $this->findBandeira()->isMasterCard();
-    }
-
-    public function isDiners(): bool
-    {
-        return $this->findBandeira()->isDiners();
-    }
-
-    public function isElo(): bool
-    {
-        return $this->findBandeira()->isElo();
-    }
-
-    public function isAmex(): bool
-    {
-        return $this->findBandeira()->isAmex();
-    }
-
-    public function isDiscover(): bool
-    {
-        return $this->findBandeira()->isDiscover();
-    }
-
-    public function isAura(): bool
-    {
-        return $this->findBandeira()->isAura();
-    }
-
-    public function isJcb(): bool
-    {
-        return $this->findBandeira()->isJcb();
-    }
-
-    public function isHipercard(): bool
-    {
-        return $this->findBandeira()->isHipercard();
-    }
-
-    public function isNull(): bool
-    {
-        return $this->findBandeira()->isNull();
+        if (strpos('is', $name) !== 0) {
+            throw new BadMethodCallException("");
+        }
+        return $this->findBandeira()->$name();
     }
 
     public function findBandeira(): Bandeira
@@ -72,11 +32,11 @@ class Bin
         ];
         foreach ($tabelaPrimeirosDigitos as $bandeira => $bins) {
             foreach ($bins as $bin) {
-                if ($this->verificarBinIgualPrimeirosDigitos($bin)) {
-                    if (!$bandeiraCartao['bin'] || strlen($bin)>strlen($bandeiraCartao['bin'])) {
-                        $bandeiraCartao['bin'] = $bin;
-                        $bandeiraCartao['bandeira'] = new Bandeira($bandeira);
-                    }
+                if ($this->verificarBinIgualPrimeirosDigitos($bin)
+                    && (!$bandeiraCartao['bin'] || strlen($bin)>strlen($bandeiraCartao['bin']))
+                ) {
+                    $bandeiraCartao['bin'] = $bin;
+                    $bandeiraCartao['bandeira'] = new Bandeira($bandeira);
                 }
             }
         }
